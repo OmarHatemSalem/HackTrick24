@@ -12,8 +12,6 @@ def solve_ml_easy(input: pd.DataFrame) -> list:
     Returns:
     list: A list of floats representing the output of the function.
     """
-
-    
     return []
 
 if __name__ == "__main__":

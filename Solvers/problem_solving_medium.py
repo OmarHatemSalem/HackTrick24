@@ -1,7 +1,7 @@
 import operator
 
-def generate_str(s: str, n: int) -> str:
-    return n*s
+# def generate_str(s: str, n: int) -> str:
+#     return n*s
 
 def solve_problem_solving_medium(input: str) -> str:
     """
@@ -51,11 +51,9 @@ def solve_problem_solving_medium(input: str) -> str:
 
 
 
-    return ans
+    return ''
 
 if __name__ == "__main__":
     input_problem_solving_medium = '3[d1[e2[l]]]'
-    input_problem_solving_medium2 = '3[e]2[d]'
 
     print(solve_problem_solving_medium(input_problem_solving_medium))
-    print(solve_problem_solving_medium(input_problem_solving_medium2))
