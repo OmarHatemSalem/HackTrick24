@@ -2,7 +2,7 @@
 import pandas as pd
 import torch
 from utils import *
-
+import operator
 
 def solve_cv_easy(test_case: tuple) -> list:
     shredded_image, shred_width = test_case
@@ -125,7 +125,19 @@ def solve_problem_solving_easy(input: tuple) -> list:
     Returns:
     list: A list of strings representing the solution to the problem.
     """
-    return []
+
+    words, X = input
+    freq = dict()
+    for word in words:
+        if not word in freq.keys():
+            freq[word] = 1
+        else:
+            freq[word] += 1
+    
+    ans = list(freq.items())
+    ans.sort(key=operator.itemgetter(1))
+
+    return [x[0] for x in ans[-X:]]
 
 
 def solve_problem_solving_medium(s: str) -> str:

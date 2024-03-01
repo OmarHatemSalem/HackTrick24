@@ -1,0 +1,20 @@
+import pandas as pd
+
+def solve_ml_easy(input: pd.DataFrame) -> list:
+    data = pd.DataFrame(data)
+
+    """
+    This function takes a pandas DataFrame as input and returns a list as output.
+
+    Parameters:
+    input (pd.DataFrame): A pandas DataFrame representing the input data.
+
+    Returns:
+    list: A list of floats representing the output of the function.
+    """
+    return []
+
+if __name__ == "__main__":
+    input_ml_easy = (['nile', 'sphinx', 'pharaoh', 'pharaoh','pharaoh', 'sphinx','pyramid','pharaoh','sphinx','sphinx'], 2)
+
+    print(solve_ml_easy(input_ml_easy))
