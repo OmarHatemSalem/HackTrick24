@@ -3,7 +3,7 @@ import pandas as pd
 # import torch
 # from utils import *
 import numpy as np
-
+import operator
 
 
 def solve_cv_easy(test_case: tuple) -> list:
