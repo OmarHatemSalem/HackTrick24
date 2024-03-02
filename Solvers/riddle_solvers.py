@@ -128,7 +128,7 @@ def solve_problem_solving_easy(input: tuple) -> list:
     return []
 
 
-def solve_problem_solving_medium(input: str) -> str:
+def solve_problem_solving_medium(input: s) -> str:
     """
     This function takes a string as input and returns a string as output.
 
@@ -138,7 +138,33 @@ def solve_problem_solving_medium(input: str) -> str:
     Returns:
     str: A string representing the solution to the problem.
     """
-    return ''
+    counts = []
+    result_stack = []
+    result = ""
+    index = 0
+
+    while index < len(s):
+        if s[index].isdigit():
+            count = 0
+            while s[index].isdigit():
+                count = 10 * count + int(s[index])
+                index += 1
+            counts.append(count)
+        elif s[index] == '[':
+            result_stack.append(result)
+            result = ""
+            index += 1
+        elif s[index] == ']':
+            temp = result_stack.pop()
+            count = counts.pop()
+            temp += result * count
+            result = temp
+            index += 1
+        else:
+            result += s[index]
+            index += 1
+
+    return result
 
 
 def solve_problem_solving_hard(input: tuple) -> int:
