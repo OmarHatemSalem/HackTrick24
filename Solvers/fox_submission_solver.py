@@ -6,8 +6,8 @@ import random
 import string
 from PIL import Image
 
-api_base_url = None
-team_id=None
+api_base_url = 'http://3.70.97.142:5000'
+team_id='dMWFLvX'
 
 def init_fox(team_id):
     '''
@@ -21,7 +21,7 @@ def init_fox(team_id):
         - carrier_image (array): The carrier image to use, presented as a NumPy array.
 
     '''
-    res = requests.post(api_base_url + '/fox/start', json={'team_id': team_id})
+    res = requests.post(api_base_url + '/fox/start', json={'teamId': team_id})
 
     return res.json()
   
@@ -77,7 +77,7 @@ def get_riddle(team_id, riddle_id):
         - test_case : A test case for the requested riddle - the format of which depends on the riddle as specified in the riddle details documented.
 
     '''
-    res = requests.post(api_base_url + '/fox/get-riddle', json={'team_id': team_id, 'riddleId': riddle_id})
+    res = requests.post(api_base_url + '/fox/get-riddle', json={'teamId': team_id, 'riddleId': riddle_id})
     return res.json()
 
 def solve_riddle(team_id, solution):
@@ -92,7 +92,8 @@ def solve_riddle(team_id, solution):
         - total_budget: The current total budget.
         - status: Indicating success or failure of the solution.
     '''
-    res = requests.post(api_base_url + '/fox/solve-riddle', json={'team_id': team_id, 'solution': solution})
+    res = requests.post(api_base_url + '/fox/solve-riddle', json={'teamId': team_id, 'solution': solution})
+    return res.json()
 
 def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
     '''
@@ -104,7 +105,7 @@ def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
         Response:
         - status: success or failure of sending the message.
     '''
-    res = requests.post(api_base_url + '/fox/send-message', json={'team_id': team_id, 'messages': messages, 'messageEntities': message_entities})
+    res = requests.post(api_base_url + '/fox/send-message', json={'teamId': team_id, 'messages': messages, 'messageEntities': message_entities})
     return res.json()
    
 def end_fox(team_id):
@@ -120,8 +121,8 @@ def end_fox(team_id):
         - return text (string): Text indicating the score and whether it's a new high score.
 
     '''
-    res = requests.post(api_base_url + '/fox/end-game', json={'team_id': team_id})
-    return res.json()
+    res = requests.post(api_base_url + '/fox/end-game', json={'teamId': team_id})
+    return res
 
 def submit_fox_attempt(team_id):
     '''
@@ -145,20 +146,63 @@ def submit_fox_attempt(team_id):
 
   #   Start the game as a fox
     response = init_fox(team_id)
+    print("Init fox response: ", response)
+
     msg = response['msg']
     carrier_image = response['carrier_image']
 
-    # Get the riddle
-    riddle_res = get_riddle(team_id, 'problem-solving-easy')
-    test_case = riddle_res['test_case']
-
-    # Solve the riddle
-    solution = riddle_solvers['problem-solving-easy'](test_case)
-    solution_res = solve_riddle(team_id, solution)
+    carrier_image = np.array(carrier_image)
 
     fake_budget = 0
+
+    # # Get the riddle
+    # riddle_res = get_riddle(team_id, 'problem_solving_easy')
+    # print("Riddle response (easy): ", riddle_res)
+    # test_case = riddle_res['test_case']
+
+    # # Solve the riddle
+    # solution = riddle_solvers['problem_solving_easy'](test_case)
+    # solution_res = solve_riddle(team_id, str(solution))
+    # print("Testcase Solution: ", solution)
+    # print("Solution response: ", solution_res)
+    # if solution_res['status'] == 'success':
+    #     fake_budget = solution_res['total_budget']
+
+    # print("Fake budget: ", fake_budget)
+    # Get the riddle
+    riddle_res = get_riddle(team_id, 'problem_solving_medium')
+    test_case = riddle_res['test_case']
+
+    print("Riddle response(medium): ", riddle_res)
+    # Solve the riddle
+    solution = riddle_solvers['problem_solving_medium'](test_case)
+    solution_res = solve_riddle(team_id, str(solution))
+
+    print("Testcase Solution: ", solution)
+    print("Solution response: ", solution_res)
+
     if solution_res['status'] == 'success':
         fake_budget = solution_res['total_budget']
+
+    print("Fake budget: ", fake_budget)
+
+    # # Get the riddle
+    # riddle_res = get_riddle(team_id, 'problem_solving_hard')
+    # test_case = riddle_res['test_case']
+
+    # print("Riddle response(hard): ", riddle_res)
+
+    # # Solve the riddle
+    # solution = riddle_solvers['problem_solving_hard'](test_case)
+    # solution_res = solve_riddle(team_id, str(solution))
+
+    # print("Testcase Solution: ", solution)
+    # print("Solution response: ", solution_res)
+
+    # if solution_res['status'] == 'success':
+    #     fake_budget = solution_res['total_budget']
+
+    # print("Fake budget: ", fake_budget)
 
     # Get the message array
     message_array, entities = generate_message_array(msg, carrier_image, fake_budget)
@@ -168,7 +212,9 @@ def submit_fox_attempt(team_id):
         print(message_array[i], entities[i])
 
     # End the game
-    end_fox(team_id)
+    end_res = end_fox(team_id)
+    print("End response: ", end_res)
+
 
 
 submit_fox_attempt(team_id)

@@ -87,18 +87,18 @@ def solve_ml_medium(input: list) -> int:
 
 
 
-def solve_sec_medium(input: torch.Tensor) -> str:
-    img = torch.tensor(img)
-    """
-    This function takes a torch.Tensor as input and returns a string as output.
+# def solve_sec_medium(input: torch.Tensor) -> str:
+#     img = torch.tensor(img)
+#     """
+#     This function takes a torch.Tensor as input and returns a string as output.
 
-    Parameters:
-    input (torch.Tensor): A torch.Tensor representing the image that has the encoded message.
+#     Parameters:
+#     input (torch.Tensor): A torch.Tensor representing the image that has the encoded message.
 
-    Returns:
-    str: A string representing the decoded message from the image.
-    """
-    return ''
+#     Returns:
+#     str: A string representing the decoded message from the image.
+#     """
+#     return ''
 
 def solve_sec_hard(input:tuple)->str:
     """
@@ -214,7 +214,7 @@ riddle_solvers = {
     'cv_hard': solve_cv_hard,
     'ml_easy': solve_ml_easy,
     'ml_medium': solve_ml_medium,
-    'sec_medium_stegano': solve_sec_medium,
+    #'sec_medium_stegano': solve_sec_medium,
     'sec_hard':solve_sec_hard,
     'problem_solving_easy': solve_problem_solving_easy,
     'problem_solving_medium': solve_problem_solving_medium,
