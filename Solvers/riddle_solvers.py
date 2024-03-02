@@ -1,8 +1,10 @@
 # Add the necessary imports here
 import pandas as pd
-import torch
-from utils import *
-import operator
+# import torch
+# from utils import *
+import numpy as np
+
+
 
 def solve_cv_easy(test_case: tuple) -> list:
     shredded_image, shred_width = test_case
