@@ -128,7 +128,7 @@ def solve_problem_solving_easy(input: tuple) -> list:
     return []
 
 
-def solve_problem_solving_medium(input: s) -> str:
+def solve_problem_solving_medium(s: str) -> str:
     """
     This function takes a string as input and returns a string as output.
 
