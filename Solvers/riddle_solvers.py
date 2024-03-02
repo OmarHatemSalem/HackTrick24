@@ -151,7 +151,21 @@ def solve_problem_solving_hard(input: tuple) -> int:
     Returns:
     int: An integer representing the solution to the problem.
     """
-    return 0
+    x, y = input
+    dp =  [[0 for i in range(y)] for _ in range(x)]
+    print(dp)
+    for i in range(x):
+        dp[i][y-1] = 1
+    for i in range(y):
+        dp[x-1][i] = 1
+    i = x-2
+    while i >= 0:
+        j = y-2
+        while j >= 0:
+            dp[i][j] = dp[i][j+1] + dp[i+1][j]
+            j -= 1
+        i -= 1
+    return dp[0][0]
 
 
 riddle_solvers = {
