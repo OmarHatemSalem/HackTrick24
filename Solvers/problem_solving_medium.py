@@ -1,7 +1,7 @@
 import operator
 
-# def generate_str(s: str, n: int) -> str:
-#     return n*s
+def generate_str(s: str, n: int) -> str:
+    return n*s
 
 def solve_problem_solving_medium(input: str) -> str:
     """
@@ -14,17 +14,48 @@ def solve_problem_solving_medium(input: str) -> str:
     str: A string representing the solution to the problem.
     """
 
+    ans = ''
     stack = []
 
-    
+    amount = ''
+    word = ''
+    new = False
     for char in input:
+        print(char, ": ", word, " ", amount)
+        if char.isdigit() and not new:
+            amount += char
+        elif char.isdigit() and new:
+            stack.append((word, int(amount)))              
+           
+            amount = char
+            word = ''
+            new = False
+        elif char.isalpha():
+            word += char
+        elif char == '[':
+            new = True
+        elif char == ']':
+            if amount != '' and word != '': 
+                stack.append((word, int(amount)))              
+            
+                amount = ''
+                word = ''
+                new = False
+                
+            
+            new = False
+            top = stack.pop()
+            ans = top[1] * (top[0] + ans)
+        # print(f"ans = {ans}")
 
 
 
 
-    return ''
+    return ans
 
 if __name__ == "__main__":
     input_problem_solving_medium = '3[d1[e2[l]]]'
+    input_problem_solving_medium2 = '3[e]2[d]'
 
     print(solve_problem_solving_medium(input_problem_solving_medium))
+    print(solve_problem_solving_medium(input_problem_solving_medium2))

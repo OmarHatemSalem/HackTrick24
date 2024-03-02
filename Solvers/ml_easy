@@ -1,7 +1,7 @@
 import pandas as pd
 
 def solve_ml_easy(input: pd.DataFrame) -> list:
-    data = pd.DataFrame(data)
+    data = pd.DataFrame(input)
 
     """
     This function takes a pandas DataFrame as input and returns a list as output.
@@ -12,6 +12,8 @@ def solve_ml_easy(input: pd.DataFrame) -> list:
     Returns:
     list: A list of floats representing the output of the function.
     """
+
+    
     return []
 
 if __name__ == "__main__":
