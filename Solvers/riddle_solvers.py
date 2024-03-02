@@ -58,7 +58,7 @@ def solve_cv_hard(input: tuple) -> int:
 
 def solve_ml_easy(input: pd.DataFrame) -> list:
     data = pd.DataFrame(data)
-
+    # run gcc test.c -o out
     """
     This function takes a pandas DataFrame as input and returns a list as output.
 
@@ -68,6 +68,7 @@ def solve_ml_easy(input: pd.DataFrame) -> list:
     Returns:
     list: A list of floats representing the output of the function.
     """
+    
     return []
 
 
@@ -99,6 +100,7 @@ def solve_sec_medium(input: torch.Tensor) -> str:
     return ''
 
 def solve_sec_hard(input:tuple)->str:
+
     """
     This function takes a tuple as input and returns a list a string.
 

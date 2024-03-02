@@ -3,16 +3,19 @@ import numpy as np
 from LSBSteg import encode
 from riddle_solvers import riddle_solvers
 
-api_base_url = None
-team_id=None
+api_base_url = 'http://3.70.97.142:5000'
+team_id='dMWFLvX'
 
 def init_fox(team_id):
     '''
     In this fucntion you need to hit to the endpoint to start the game as a fox with your team id.
     If a sucessful response is returned, you will recive back the message that you can break into chunkcs
-      and the carrier image that you will encode the chunk in it.
+    and the carrier image that you will encode the chunk in it.
     '''
-    pass
+
+    resp = requests.post(f'{api_base_url}/fox/start', json={'teamId': team_id})
+
+    return resp.json()
 
 def generate_message_array(message, image_carrier):  
     '''
@@ -34,7 +37,11 @@ def get_riddle(team_id, riddle_id):
         3. You cannot request several riddles at a time, so requesting a new riddle without answering the old one
           will allow you to answer only the new riddle and you will have no access again to the old riddle. 
     '''
-    pass
+    
+    resp = requests.post(f'{api_base_url}/fox/get-riddle', json={'teamId': team_id, 'riddleId': riddle_id})
+
+    return resp.json()
+
 
 def solve_riddle(team_id, solution):
     '''
@@ -42,7 +49,10 @@ def solve_riddle(team_id, solution):
     You will hit the API end point that submits your answer.
     Use te riddle_solvers.py to implement the logic of each riddle.
     '''
-    pass
+    
+    resp = requests.post(f'{api_base_url}/fox/solve-riddle', json={'teamId': team_id, 'solution': solution})
+
+    return resp.json()
 
 def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
     '''
@@ -50,7 +60,10 @@ def send_message(team_id, messages, message_entities=['F', 'E', 'R']):
     You will need to send the message (images) in each of the 3 channels along with their entites.
     Refer to the API documentation to know more about what needs to be send in this api call. 
     '''
-    pass
+    
+    resp = requests.post(f'{api_base_url}/fox/send-message', json={'teamId': team_id, 'messages': messages, 'messageEntities': message_entities})
+
+    return resp.json()
    
 def end_fox(team_id):
     '''
@@ -60,7 +73,9 @@ def end_fox(team_id):
     2. Calling it without sending all the real messages will also affect your scoring fucntion
       (Like failing to submit the entire message within the timelimit of the game).
     '''
-    pass
+    
+    resp = requests.post(f'{api_base_url}/fox/end-game', json={'teamId': team_id})
+    return resp.json()
 
 def submit_fox_attempt(team_id):
     '''
@@ -81,7 +96,21 @@ def submit_fox_attempt(team_id):
             2.b. You cannot send 3 E(Empty) messages, there should be atleast R(Real)/F(Fake)
         3. Refer To the documentation to know more about the API handling 
     '''
-    pass 
+
+    # Start the game as a fox
+    init_fox(team_id)
+
+    # Get the riddle
+    riddle_resp = get_riddle(team_id, 'problem-solving-medium')
+
+    # Solve the riddle
+    solution = riddle_solvers['problem-solving-medium'](resp['test_case'])
+    solution_resp = solve_riddle(team_id, solution)
+
+    num_of_fake_messages = 0
+    if solution_resp["status"] == "success":
+        num_of_fake_messages = solution_resp['total_budget']
+     
 
 
 submit_fox_attempt(team_id)
