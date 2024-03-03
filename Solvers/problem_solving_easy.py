@@ -13,20 +13,20 @@ def solve_problem_solving_easy(input: tuple) -> list:
     list: A list of strings representing the solution to the problem.
     """
 
-    words, X = input
-    freq = dict()
+    words, n = input
+    freq = {}
     for word in words:
-        if not word in freq.keys():
-            freq[word] = 1
-        else:
-            freq[word] += 1
-    
-    ans = list(freq.items())
-    ans.sort(key=operator.itemgetter(1))
-
-    return [x[0] for x in ans[-X:]]
+        if word not in freq:
+            freq[word] = 0
+        freq[word] -= 1
+    l = []
+    for key, val in freq.items():
+        l.append((val, key))
+    l.sort()
+    ans = [word for _, word in l[:n]]
+    return ans
 
 if __name__ == "__main__":
-    input_problem_solving_easy = (['nile', 'sphinx', 'pharaoh', 'pharaoh','pharaoh', 'sphinx','pyramid','pharaoh','sphinx','sphinx'], 2)
+    input_problem_solving_easy = (['nile', 'sphinx', 'pharaoh', 'pharaoh','pharaoh', 'sphinx','pyramid','pharaoh','sphinx','sphinx'], 3)
 
     print(solve_problem_solving_easy(input_problem_solving_easy))

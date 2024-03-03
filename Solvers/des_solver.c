@@ -1,6 +1,8 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <inttypes.h>
+
 
 #define LB32_MASK 0x00000001
 #define LB64_MASK 0x0000000000000001
@@ -111,18 +113,17 @@ uint64_t des(uint64_t input, uint64_t key, char mode) {
 
     return inv_init_perm_res;
 }
-int main(int argc, char *argv[]) {
 
+int main(int argc, char *argv[]) {
     // Convert hexadecimal strings to uint64_t
     uint64_t key, plaintext;
-    sscanf(argv[1], "%llx", &key);
-    sscanf(argv[2], "%llx", &plaintext);
+    sscanf(argv[1], "%" SCNx64, &key);
+    sscanf(argv[2], "%" SCNx64, &plaintext);
 
     // Call des function with the provided key, plaintext, and 'e' for encryption mode
     uint64_t ciphertext = des(plaintext, key, 'e');
 
-    printf("%016llx\n", ciphertext);
     // Print the result
-
+    printf("%" PRIx64 "\n", ciphertext);
     return 0;
 }

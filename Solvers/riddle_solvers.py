@@ -4,6 +4,14 @@ import pandas as pd
 # from utils import *
 import numpy as np
 import operator
+import subprocess
+
+def run_des_program(key, plaintext):
+    #print(f"Running des_program with key {hex(key)} and plaintext {hex(plaintext)}...")
+    process = subprocess.Popen(['./des_C', key, plaintext], stdout=subprocess.PIPE)
+    output, _ = process.communicate()
+    # Convert the output to an integer
+    return output.decode('utf-8').strip().upper()
 
 
 def solve_cv_easy(test_case: tuple) -> list:
@@ -112,8 +120,10 @@ def solve_sec_hard(input:tuple)->str:
     Returns:
     list:A string of ciphered text
     """
-    
-    return ''
+    key, plaintext = input
+    key = "0x" + key
+    plaintext = "0x" + plaintext
+    return str(run_des_program(key, plaintext))
 
 def solve_problem_solving_easy(input: tuple) -> list:
     """
@@ -128,18 +138,18 @@ def solve_problem_solving_easy(input: tuple) -> list:
     list: A list of strings representing the solution to the problem.
     """
 
-    words, X = input
-    freq = dict()
+    words, n = input
+    freq = {}
     for word in words:
-        if not word in freq.keys():
-            freq[word] = 1
-        else:
-            freq[word] += 1
-    
-    ans = list(freq.items())
-    ans.sort(key=operator.itemgetter(1))
-
-    return [x[0] for x in ans[-X:]]
+        if word not in freq:
+            freq[word] = 0
+        freq[word] -= 1
+    l = []
+    for key, val in freq.items():
+        l.append((val, key))
+    l.sort()
+    ans = [word for _, word in l[:n]]
+    return ans
 
 
 def solve_problem_solving_medium(s: str) -> str:
@@ -193,7 +203,6 @@ def solve_problem_solving_hard(input: tuple) -> int:
     """
     x, y = input
     dp =  [[0 for i in range(y)] for _ in range(x)]
-    print(dp)
     for i in range(x):
         dp[i][y-1] = 1
     for i in range(y):
