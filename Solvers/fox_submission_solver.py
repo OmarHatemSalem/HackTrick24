@@ -5,6 +5,7 @@ from riddle_solvers import riddle_solvers
 import random
 import string
 from PIL import Image
+from transformers import pipeline
 
 api_base_url = 'http://3.70.97.142:5000'
 team_id='dMWFLvX'
@@ -37,17 +38,34 @@ def generate_message_array(message, image_carrier):
     message_array = []
     entities = []
 
+    chunk1 = message[:7]
+    chunk2 = message[7:14]
+    chunk3 = message[14:]
     # Encode the real message
-    encoded_real = encode(image_carrier, message)
-    encoded_real_list = encoded_real.tolist()
+    encoded_real1 = encode(image_carrier, chunk1)
+    encoded_real1_list = encoded_real1.tolist()
+
+    encoded_real2 = encode(image_carrier, chunk2)
+    encoded_real2_list = encoded_real2.tolist()
+
+    encoded_real3 = encode(image_carrier, chunk3)
+    encoded_real3_list = encoded_real3.tolist()
 
     # Encode an empty message
-    encoded_empty = encode(image_carrier, "")
-    encoded_empty_list = encoded_empty.tolist()
+    encoded_empty1 = encode(image_carrier, "")
+    encoded_empty1_list = encoded_empty1.tolist()
+
 
     # Generate the message array
-    message_array.append([encoded_real_list, encoded_empty_list, encoded_empty_list])
+    message_array.append([encoded_real1_list, encoded_empty1_list, encoded_empty1_list])
     entities.append(['R', 'F', 'F'])
+
+    message_array.append([encoded_real2_list, encoded_empty1_list, encoded_empty1_list])
+    entities.append(['R', 'F', 'F'])
+
+    message_array.append([encoded_real3_list, encoded_empty1_list, encoded_empty1_list])
+    entities.append(['R', 'F', 'F'])
+    
 
 
     return message_array, entities
@@ -146,6 +164,8 @@ def submit_fox_attempt(team_id):
             2.b. You cannot send 3 E(Empty) messages, there should be atleast R(Real)/F(Fake)
         3. Refer To the documentation to know more about the API handling 
     '''
+    # vqa_pipeline = pipeline("visual-question-answering")
+    fake_budget = 0
 
   #   Start the game as a fox
     response = init_fox(team_id)
@@ -155,85 +175,95 @@ def submit_fox_attempt(team_id):
 
     carrier_image = np.array(carrier_image)
 
-    # fake_budget = 0
+    # Problem Solving Easy Riddle
 
-    # Get the riddle
     riddle_res = get_riddle(team_id, 'problem_solving_easy')
-    # print("Riddle response (easy): ", riddle_res)
     test_case = riddle_res['test_case']
-
-    # Solve the riddle
     solution = riddle_solvers['problem_solving_easy'](test_case)
     solution_res = solve_riddle(team_id, solution)
 
-    # print("Testcase Solution: ", solution)
-    # print("Solution response: ", solution_res)
-
-    # if solution_res['status'] == 'success':
-    #     fake_budget = solution_res['total_budget']
-
-    # print("Fake budget: ", fake_budget)
+    # Problem Solving Medium Riddle
    
-    # Get the riddle
     riddle_res = get_riddle(team_id, 'problem_solving_medium')
     test_case = riddle_res['test_case']
-
-
-    # Solve the riddle
     solution = riddle_solvers['problem_solving_medium'](test_case)
     solution_res = solve_riddle(team_id, solution)
 
+    # Problem Solving Hard Riddle
 
-    # if solution_res['status'] == 'success':
-    #     fake_budget = solution_res['total_budget']
-
-
-    # Get the riddle
     riddle_res = get_riddle(team_id, 'problem_solving_hard')
     test_case = riddle_res['test_case']
-
-
-    # Solve the riddle
     solution = riddle_solvers['problem_solving_hard'](test_case)
     solution_res = solve_riddle(team_id, solution)
 
+    # Computer Vision Easy Riddle
+
+    # riddle_res = get_riddle(team_id, 'cv_easy')
+    # test_case = riddle_res['test_case']
+    # try:
+    #     solution = riddle_solvers['cv_easy'](test_case)
+    #     solution_res = solve_riddle(team_id, solution)
+    # except:
+    #     print("cv_easy failed")
+
+    # Computer Vision Hard Riddle
+
+    # riddle_res = get_riddle(team_id, 'cv_hard')
+    # test_case = riddle_res['test_case']
+    # try:
+    #     extracted_question, image = test_case
+    #     image = np.asarray(image, dtype=np.uint8)
+    #     image = Image.fromarray(image)
+    #     ans = vqa_pipeline(image, extracted_question, top_k=1)
+    #     solution = int(ans[0]['answer'])
+    #     solution_res = solve_riddle(team_id, solution)
+    #     print("Went to the model successfully")
+    # except:
+    #     solution_res = solve_riddle(team_id, 2)
+    #     print("cv_hard failed")
 
     # if solution_res['status'] == 'success':
-    #     fake_budget = solution_res['total_budget']
+    #     print("CV Hard Riddle Solved Successfully")
+
+    # sec Medium Riddle
+    # riddle_res = get_riddle(team_id, 'sec_medium_stegano')
+    # test_case = riddle_res['test_case']
+    # try:
+    #     image = np.asarray(test_case, dtype=np.uint8)
+    #     solution = riddle_solvers['sec_medium_stegano'](image)
+    #     solution_res = solve_riddle(team_id, solution)
+    #     print("Sec Medium Riddle Entered Try Block")
+    # except:
+    #     print("Sec Medium Riddle Failed")
+    
+
+    
 
 
+    # Sec Hard Riddle
 
-    # Get the riddle
     riddle_res = get_riddle(team_id, 'sec_hard')
     test_case = riddle_res['test_case']
-
-    # print("Riddle response(sec_hard): ", riddle_res)
-
-    # Solve the riddle
     solution = riddle_solvers['sec_hard'](test_case)
     solution_res = solve_riddle(team_id, solution)
 
-    # print("Testcase Solution: ", solution)
-    # print("Solution response: ", solution_res)
 
-    # if solution_res['status'] == 'success':
-    #     fake_budget = solution_res['total_budget']
+    fake_budget = solution_res['total_budget']
 
-    # print("Fake budget: ", fake_budget)
+    print("Fake budget: ", fake_budget)
 
 
     # Get the message array
     message_array, entities = generate_message_array(msg, carrier_image)
 
     # Send the messages
-    send_message(team_id, message_array[0], entities[0])
+    # send_message(team_id, message_array[0], entities[0])
 
-    # for i in range(0, len(message_array)):
-    #     message = message_array[i]
-    #     entity = entities[i]
+    for i in range(0, len(message_array)):
+        message = message_array[i]
+        entity = entities[i]
 
-    #     send_res = send_message(team_id, message, entity)
-    #     print("Send response: ", send_res)
+        send_res = send_message(team_id, message, entity)
 
     # End the game
     end_res = end_fox(team_id)
