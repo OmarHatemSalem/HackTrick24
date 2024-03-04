@@ -1,1 +1,3 @@
 thesis
+*.npz
+*:Zone.Identifier
